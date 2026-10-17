@@ -1,0 +1,21 @@
+# Render Blueprint: Dashboard -> New -> Blueprint -> pick this repository.
+services:
+  - type: web
+    name: orbisphere-link
+    runtime: node
+    # A persistent disk requires a paid instance type.
+    plan: starter
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATA_FILE
+        value: /var/data/db.json
+    disk:
+      name: orbisphere-link-data
+      mountPath: /var/data
+      sizeGB: 1
+    domains:
+      - link.spherechain.space

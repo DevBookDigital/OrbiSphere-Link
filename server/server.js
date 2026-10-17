@@ -21,6 +21,8 @@ const PUBLIC_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '.
 const HISTORY_LIMIT = 200;
 const MAX_PAYLOAD_BYTES = 512 * 1024;
 const RATE_LIMIT_PER_10S = 100;
+// Pings keep proxies (e.g. Render's) from closing idle sockets and reveal dead peers.
+const HEARTBEAT_MS = 30_000;
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -38,6 +40,8 @@ const SECURITY_HEADERS = {
   'Referrer-Policy': 'no-referrer',
   'Cross-Origin-Opener-Policy': 'same-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+  // Ignored by browsers over plain http (localhost); enforced once served over HTTPS.
+  'Strict-Transport-Security': 'max-age=31536000',
 };
 
 class ClientError extends Error {}
@@ -332,7 +336,22 @@ export async function createServer({ port = 8080, host = '0.0.0.0', dataFile = n
 
   const wss = new WebSocketServer({ server: httpServer, path: '/ws', maxPayload: MAX_PAYLOAD_BYTES });
 
+  const heartbeat = setInterval(() => {
+    for (const ws of wss.clients) {
+      if (ws.alive === false) {
+        ws.terminate();
+        continue;
+      }
+      ws.alive = false;
+      ws.ping();
+    }
+  }, HEARTBEAT_MS);
+
   wss.on('connection', (ws, req) => {
+    ws.alive = true;
+    ws.on('pong', () => {
+      ws.alive = true;
+    });
     // Reject cross-site WebSocket hijacking: browsers always send Origin.
     const origin = req.headers.origin;
     let originHost = null;
@@ -394,6 +413,7 @@ export async function createServer({ port = 8080, host = '0.0.0.0', dataFile = n
     port: actualPort,
     store,
     async close() {
+      clearInterval(heartbeat);
       for (const client of wss.clients) client.terminate();
       await new Promise((resolve) => wss.close(resolve));
       await new Promise((resolve) => httpServer.close(resolve));

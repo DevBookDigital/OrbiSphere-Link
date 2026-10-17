@@ -24,6 +24,19 @@ Environment variables: `PORT` (default `8080`), `HOST` (default `0.0.0.0`),
 > WebCrypto only works in a secure context. In production, serve over **HTTPS**
 > (for example behind a TLS-terminating reverse proxy); `localhost` works for development.
 
+## Deploying to Render
+
+`render.yaml` is a Render Blueprint. It defines a Node web service with a 1 GB
+persistent disk at `/var/data`, which keeps accounts, circles and ciphertext
+across restarts, plus a health check at `/healthz` and the custom domain
+`link.spherechain.space`. Render provides HTTPS, which WebCrypto requires.
+
+1. In Render: **New → Blueprint**, then pick this repository and apply.
+2. In GoDaddy DNS for `spherechain.space`, add a `CNAME` record named `link`
+   that points to the service's `onrender.com` hostname.
+3. In Render, verify the domain under the service's **Custom Domains**. The
+   TLS certificate is issued automatically.
+
 ## How the encryption works
 
 All cryptography runs in the browser through the standard WebCrypto API (no
