@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OrbiSphere Link</title>
+  <link rel="stylesheet" href="/css/app.css">
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+  <main id="setup" class="setup" hidden>
+    <div class="card">
+      <h1>OrbiSphere Link</h1>
+      <p class="muted">End-to-end encrypted group messaging. Your keys are generated in this browser and never leave it.</p>
+      <form id="setup-form">
+        <label for="setup-username">Choose a username</label>
+        <input id="setup-username" autocomplete="username" required minlength="3" maxlength="32" pattern="[a-zA-Z][a-zA-Z0-9_.\-]{2,31}" placeholder="e.g. ada">
+        <button type="submit">Create my encrypted identity</button>
+      </form>
+      <p class="hint">Heads-up: this identity lives only in this browser. Clearing site data deletes it and the username cannot be recovered.</p>
+    </div>
+  </main>
+
+  <div id="app" class="app" hidden>
+    <aside class="sidebar">
+      <header class="me">
+        <div>
+          <div class="brand">OrbiSphere Link</div>
+          <div class="muted small">Signed in as <strong id="me-name"></strong></div>
+        </div>
+        <span id="conn-status" class="status" title="Connection status">offline</span>
+      </header>
+      <button id="show-my-safety" class="link">My safety number</button>
+
+      <h2>Groups</h2>
+      <ul id="group-list" class="group-list"></ul>
+
+      <form id="new-group-form" class="stack">
+        <h2>New group</h2>
+        <input id="new-group-name" placeholder="Group name" maxlength="64" required>
+        <input id="new-group-members" placeholder="Members, comma separated">
+        <button type="submit">Create encrypted group</button>
+      </form>
+    </aside>
+
+    <section class="chat">
+      <div id="empty-state" class="empty">
+        <p>Select or create a group to start an encrypted conversation.</p>
+      </div>
+
+      <div id="chat-view" class="chat-view" hidden>
+        <header class="chat-header">
+          <div>
+            <h2 id="chat-title"></h2>
+            <div class="muted small"><span class="lock">🔒</span> End-to-end encrypted · key epoch <span id="chat-epoch"></span></div>
+          </div>
+          <button id="toggle-members">Members</button>
+        </header>
+        <ol id="messages" class="messages" aria-live="polite"></ol>
+        <form id="compose" class="compose">
+          <textarea id="compose-text" rows="2" placeholder="Write an encrypted message…" maxlength="8000" required></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </section>
+
+    <aside id="members-panel" class="members" hidden>
+      <h2>Members</h2>
+      <p class="muted small">Compare safety numbers with each person over a channel you trust (in person, a call) and mark them verified.</p>
+      <ul id="member-list" class="member-list"></ul>
+      <div id="owner-tools" class="stack" hidden>
+        <form id="add-member-form" class="stack">
+          <input id="add-member-name" placeholder="Add members, comma separated" required>
+          <button type="submit">Add &amp; rotate key</button>
+        </form>
+        <button id="rotate-key">Rotate group key</button>
+      </div>
+      <button id="leave-group" class="danger" hidden>Leave group</button>
+    </aside>
+  </div>
+
+  <dialog id="safety-dialog">
+    <h2 id="safety-title"></h2>
+    <p class="muted small">If this number matches what the other person sees for you on their device, nobody is intercepting your messages.</p>
+    <code id="safety-number" class="safety"></code>
+    <form method="dialog"><button>Close</button></form>
+  </dialog>
+
+  <div id="toasts" class="toasts" role="status"></div>
+</body>
+</html>

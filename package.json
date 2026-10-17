@@ -1,0 +1,17 @@
+{
+  "name": "orbisphere-link",
+  "version": "0.1.0",
+  "description": "End-to-end encrypted group messaging web app",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "ws": "8.22.0"
+  }
+}
