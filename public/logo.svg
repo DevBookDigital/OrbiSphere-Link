@@ -1,5 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <circle cx="32" cy="32" r="30" stroke="#e7000b" stroke-opacity=".55" stroke-width="2"/>
-  <circle cx="32" cy="32" r="20" stroke="#e7000b" stroke-opacity=".8" stroke-width="2"/>
-  <circle cx="32" cy="32" r="10" fill="#82181a" stroke="#e7000b" stroke-width="2"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" fill="none">
+  <defs>
+    <radialGradient id="halo" cx="150" cy="150" r="150" gradientUnits="userSpaceOnUse">
+      <stop offset=".8" stop-color="#fb2c36" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#fb2c36" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="150" cy="150" r="150" fill="url(#halo)"/>
+  <circle cx="150" cy="150" r="125" fill="#050203" stroke="#6e1f25" stroke-width="3"/>
+  <circle cx="150" cy="150" r="76" stroke="#6e1f25" stroke-width="3"/>
+  <circle cx="150" cy="150" r="31" fill="#fb2c36"/>
 </svg>

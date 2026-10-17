@@ -13,9 +13,10 @@
   <main id="setup" class="hero" hidden>
     <canvas id="rain" class="rain" aria-hidden="true"></canvas>
     <div class="hero-inner">
-      <img src="/logo.svg" alt="" class="hero-logo" width="104" height="104">
-      <p class="eyebrow wide">OrbiSphere · SphereChain Link</p>
-      <h1>Your circles.<br><span class="accent">Your keys.</span></h1>
+      <img src="/logo.svg" alt="" class="hero-logo" width="168" height="168">
+      <h1 class="wordmark">OrbiSphere <span class="accent">Link</span></h1>
+      <p class="tagline">Where every wallet is a node. Where every node is the network.</p>
+      <p class="eyebrow wide">End-to-end encrypted circles</p>
       <p class="lead">End-to-end encrypted group messaging. Every circle has its own key, rotated whenever someone joins or leaves.</p>
       <p class="sub">Your identity keys are generated on this device and never leave it. The network only ever relays ciphertext.</p>
       <form id="setup-form" class="pill-form">
@@ -24,15 +25,19 @@
         <button type="submit" class="btn">Join the network <span aria-hidden="true">→</span></button>
       </form>
       <p class="fine">This identity lives only in this browser. Clearing site data deletes it, and the username cannot be recovered.</p>
+      <div class="cobrand">
+        <img src="/img/linkusd-sphere.jpg" alt="" width="40" height="40">
+        <span>LinkUSD <span class="x">×</span> OrbiSphere SphereChain</span>
+      </div>
     </div>
   </main>
 
   <div id="app" class="app" hidden>
     <aside class="sidebar">
       <header class="me">
-        <img src="/logo.svg" alt="" width="34" height="34">
+        <img src="/logo.svg" alt="" width="42" height="42">
         <div class="me-text">
-          <div class="brand">OrbiSphere <span class="accent">Link</span></div>
+          <div class="brand wordmark">OrbiSphere <span class="accent">Link</span></div>
           <div class="muted small">@<span id="me-name"></span></div>
         </div>
         <span id="conn-status" class="status" title="Connection status">offline</span>
@@ -52,7 +57,8 @@
 
     <section class="chat">
       <div id="empty-state" class="empty">
-        <img src="/logo.svg" alt="" width="72" height="72">
+        <img src="/logo.svg" alt="" width="112" height="112">
+        <p class="tagline">Where every wallet is a node. Where every node is the network.</p>
         <p class="eyebrow wide">End-to-end encrypted</p>
         <h2>Pick a circle. <span class="accent">Speak freely.</span></h2>
         <p class="muted">Select or create a circle to start an encrypted conversation.</p>
