@@ -2,6 +2,7 @@
 
 import { OrbiClient, KeyChangedError } from './client.js';
 import { openStore } from './idb.js';
+import { startRain } from './rain.js';
 
 const $ = (id) => document.getElementById(id);
 const wsUrl = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`;
@@ -80,15 +81,14 @@ function renderGroups() {
   const list = $('group-list');
   list.replaceChildren();
   const groups = [...client.groups.values()].sort((a, b) => a.name.localeCompare(b.name));
-  if (groups.length === 0) list.append(el('li', { class: 'muted small', textContent: 'No groups yet.' }));
+  if (groups.length === 0) list.append(el('li', { class: 'muted small', textContent: 'No circles yet.' }));
   for (const g of groups) {
     list.append(el('li', {},
-      el('button', {
-        class: `group ${g.id === activeGroupId ? 'active' : ''}`,
-        textContent: g.name,
-        title: `${g.latest.members.length} members · epoch ${g.epoch}`,
-        onclick: () => openGroup(g.id),
-      })));
+      el('button', { class: `group ${g.id === activeGroupId ? 'active' : ''}`, onclick: () => openGroup(g.id) },
+        el('span', { class: 'avatar', textContent: g.name.trim().slice(0, 2) }),
+        el('span', { class: 'group-text' },
+          el('span', { class: 'group-name', textContent: g.name }),
+          el('span', { class: 'group-meta', textContent: `${g.latest.members.length} members · epoch ${g.epoch}` })))));
   }
   if (activeGroupId && !client.groups.has(activeGroupId)) {
     activeGroupId = null;
@@ -131,13 +131,14 @@ async function renderMembers() {
   const rows = await Promise.all(g.latest.members.map(async (name) => {
     const contact = await client.getContact(name).catch(() => null);
     const left = !g.serverMembers.includes(name);
-    const li = el('li', { class: 'member' },
+    const info = el('div', { class: 'member-info' },
       el('div', {},
         el('strong', { textContent: name }),
         name === g.owner ? el('span', { class: 'badge', textContent: 'owner' }) : null,
         name === client.username ? el('span', { class: 'badge', textContent: 'you' }) : null,
         contact?.verified && name !== client.username ? el('span', { class: 'badge ok', textContent: 'verified' }) : null,
         left ? el('span', { class: 'badge warn', textContent: 'left · rotating key' }) : null));
+    const li = el('li', { class: 'member' }, el('span', { class: 'avatar', textContent: name.slice(0, 2) }), info);
     if (name !== client.username) {
       const actions = el('div', { class: 'actions' },
         el('button', { class: 'link', textContent: 'Safety number', onclick: () => showSafety(name) }),
@@ -150,12 +151,12 @@ async function renderMembers() {
           class: 'link danger',
           textContent: 'Remove',
           onclick: () => guard(async () => {
-            if (!confirm(`Remove ${name}? The group key will be rotated so they can't read new messages.`)) return;
+            if (!confirm(`Remove ${name}? The circle key will be rotated so they can't read new messages.`)) return;
             await client.removeMember(g.id, name);
             toast(`${name} removed. New key distributed.`);
           }),
         }) : null);
-      li.append(actions);
+      info.append(actions);
     }
     return li;
   }));
@@ -179,6 +180,7 @@ async function openGroup(id) {
   activeGroupId = id;
   renderGroups();
   renderChat();
+  if (matchMedia('(max-width: 860px)').matches) $('chat-view').scrollIntoView({ block: 'start' });
   const g = client.groups.get(id);
   if (!g.historyLoaded) await guard(() => client.loadHistory(id));
   $('compose-text').focus();
@@ -202,7 +204,7 @@ function bindUi() {
     guard(async () => {
       const g = await client.createGroup($('new-group-name').value, splitNames($('new-group-members').value));
       e.target.reset();
-      toast(`Group "${g.name}" created with a fresh encryption key.`);
+      toast(`Circle "${g.name}" created with a fresh encryption key.`);
       openGroup(g.id);
     });
   });
@@ -215,7 +217,12 @@ function bindUi() {
     guard(async () => {
       await client.send(activeGroupId, text);
       box.value = '';
+      box.style.height = '';
     });
+  });
+  $('compose-text').addEventListener('input', (e) => {
+    e.target.style.height = 'auto';
+    e.target.style.height = `${e.target.scrollHeight + 2}px`;
   });
   $('compose-text').addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -233,17 +240,17 @@ function bindUi() {
     guard(async () => {
       await client.addMembers(activeGroupId, splitNames($('add-member-name').value));
       e.target.reset();
-      toast('Members added. A new group key was generated; they cannot read earlier messages.');
+      toast('Members added. A new circle key was generated; they cannot read earlier messages.');
     });
   });
 
   $('rotate-key').addEventListener('click', () => guard(async () => {
     await client.rotateKey(activeGroupId);
-    toast('Group key rotated.');
+    toast('Circle key rotated.');
   }));
 
   $('leave-group').addEventListener('click', () => guard(async () => {
-    if (!confirm('Leave this group? You will stop receiving messages.')) return;
+    if (!confirm('Leave this circle? You will stop receiving messages.')) return;
     await client.leave(activeGroupId);
     activeGroupId = null;
     renderChat();
@@ -255,7 +262,7 @@ function bindUi() {
   });
   client.addEventListener('removed', (e) => {
     const g = e.detail?.groupId;
-    if (g === activeGroupId) toast('You are no longer a member of this group.', 'warn');
+    if (g === activeGroupId) toast('You are no longer a member of this circle.', 'warn');
   });
   client.addEventListener('keychange', (e) => toast(
     `WARNING: ${e.detail.username}'s identity key changed. Messages to them are blocked until you re-verify.`, 'error'));
@@ -273,6 +280,7 @@ async function start() {
 
   if (!(await client.loadIdentity())) {
     $('setup').hidden = false;
+    startRain($('rain'));
     $('setup-form').addEventListener('submit', (e) => {
       e.preventDefault();
       guard(async () => {

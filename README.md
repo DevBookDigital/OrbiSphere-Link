@@ -13,6 +13,8 @@ npm start            # http://localhost:8080
 npm test             # crypto unit tests + end-to-end tests against a real server
 ```
 
+The UI follows the [spherechain.space](https://spherechain.space) visual language (dark navy, SphereChain red, mono labels, pill buttons); groups are called *circles*.
+
 Open the app in two different browsers (or one normal + one private window),
 create an identity in each, then create a group and add the other user.
 
@@ -98,6 +100,7 @@ public/js/protocol.js  shared constants and validation
 public/js/client.js    client core: auth, key pinning, group verification, encrypt/decrypt
 public/js/app.js       browser UI
 public/js/idb.js       IndexedDB key store
+public/js/rain.js      decorative falling-glyph backdrop for the landing screen
 server/server.js       HTTP + WebSocket relay (validates and verifies, cannot decrypt)
 server/store.js        JSON-file persistence
 test/                  unit + end-to-end tests (node:test)

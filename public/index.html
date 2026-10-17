@@ -3,87 +3,99 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d12">
   <title>OrbiSphere Link</title>
+  <link rel="icon" type="image/svg+xml" href="/logo.svg">
   <link rel="stylesheet" href="/css/app.css">
   <script type="module" src="/js/app.js"></script>
 </head>
 <body>
-  <main id="setup" class="setup" hidden>
-    <div class="card">
-      <h1>OrbiSphere Link</h1>
-      <p class="muted">End-to-end encrypted group messaging. Your keys are generated in this browser and never leave it.</p>
-      <form id="setup-form">
-        <label for="setup-username">Choose a username</label>
-        <input id="setup-username" autocomplete="username" required minlength="3" maxlength="32" pattern="[a-zA-Z][a-zA-Z0-9_.\-]{2,31}" placeholder="e.g. ada">
-        <button type="submit">Create my encrypted identity</button>
+  <main id="setup" class="hero" hidden>
+    <canvas id="rain" class="rain" aria-hidden="true"></canvas>
+    <div class="hero-inner">
+      <img src="/logo.svg" alt="" class="hero-logo" width="104" height="104">
+      <p class="eyebrow wide">OrbiSphere · SphereChain Link</p>
+      <h1>Your circles.<br><span class="accent">Your keys.</span></h1>
+      <p class="lead">End-to-end encrypted group messaging. Every circle has its own key, rotated whenever someone joins or leaves.</p>
+      <p class="sub">Your identity keys are generated on this device and never leave it. The network only ever relays ciphertext.</p>
+      <form id="setup-form" class="pill-form">
+        <label for="setup-username" class="sr-only">Choose a username</label>
+        <input id="setup-username" autocomplete="username" required minlength="3" maxlength="32" pattern="[a-zA-Z][a-zA-Z0-9_.\-]{2,31}" placeholder="Choose a username">
+        <button type="submit" class="btn">Join the network <span aria-hidden="true">→</span></button>
       </form>
-      <p class="hint">Heads-up: this identity lives only in this browser. Clearing site data deletes it and the username cannot be recovered.</p>
+      <p class="fine">This identity lives only in this browser. Clearing site data deletes it, and the username cannot be recovered.</p>
     </div>
   </main>
 
   <div id="app" class="app" hidden>
     <aside class="sidebar">
       <header class="me">
-        <div>
-          <div class="brand">OrbiSphere Link</div>
-          <div class="muted small">Signed in as <strong id="me-name"></strong></div>
+        <img src="/logo.svg" alt="" width="34" height="34">
+        <div class="me-text">
+          <div class="brand">OrbiSphere <span class="accent">Link</span></div>
+          <div class="muted small">@<span id="me-name"></span></div>
         </div>
         <span id="conn-status" class="status" title="Connection status">offline</span>
       </header>
-      <button id="show-my-safety" class="link">My safety number</button>
+      <button id="show-my-safety" class="btn ghost small-btn">My safety number</button>
 
-      <h2>Groups</h2>
+      <p class="eyebrow">Your circles</p>
       <ul id="group-list" class="group-list"></ul>
 
-      <form id="new-group-form" class="stack">
-        <h2>New group</h2>
-        <input id="new-group-name" placeholder="Group name" maxlength="64" required>
+      <form id="new-group-form" class="card stack">
+        <p class="eyebrow">New circle</p>
+        <input id="new-group-name" placeholder="Circle name" maxlength="64" required>
         <input id="new-group-members" placeholder="Members, comma separated">
-        <button type="submit">Create encrypted group</button>
+        <button type="submit" class="btn">Create encrypted circle</button>
       </form>
     </aside>
 
     <section class="chat">
       <div id="empty-state" class="empty">
-        <p>Select or create a group to start an encrypted conversation.</p>
+        <img src="/logo.svg" alt="" width="72" height="72">
+        <p class="eyebrow wide">End-to-end encrypted</p>
+        <h2>Pick a circle. <span class="accent">Speak freely.</span></h2>
+        <p class="muted">Select or create a circle to start an encrypted conversation.</p>
       </div>
 
       <div id="chat-view" class="chat-view" hidden>
         <header class="chat-header">
           <div>
             <h2 id="chat-title"></h2>
-            <div class="muted small"><span class="lock">🔒</span> End-to-end encrypted · key epoch <span id="chat-epoch"></span></div>
+            <div class="chip"><span class="dot"></span>E2E encrypted · key epoch <span id="chat-epoch"></span></div>
           </div>
-          <button id="toggle-members">Members</button>
+          <button id="toggle-members" class="btn ghost">Members</button>
         </header>
         <ol id="messages" class="messages" aria-live="polite"></ol>
         <form id="compose" class="compose">
-          <textarea id="compose-text" rows="2" placeholder="Write an encrypted message…" maxlength="8000" required></textarea>
-          <button type="submit">Send</button>
+          <textarea id="compose-text" rows="1" placeholder="Write an encrypted message…" maxlength="8000" required></textarea>
+          <button type="submit" class="btn">Send <span aria-hidden="true">→</span></button>
         </form>
       </div>
     </section>
 
     <aside id="members-panel" class="members" hidden>
-      <h2>Members</h2>
+      <p class="eyebrow">Members</p>
       <p class="muted small">Compare safety numbers with each person over a channel you trust (in person, a call) and mark them verified.</p>
       <ul id="member-list" class="member-list"></ul>
-      <div id="owner-tools" class="stack" hidden>
+      <div id="owner-tools" class="card stack" hidden>
+        <p class="eyebrow">Owner controls</p>
         <form id="add-member-form" class="stack">
           <input id="add-member-name" placeholder="Add members, comma separated" required>
-          <button type="submit">Add &amp; rotate key</button>
+          <button type="submit" class="btn">Add &amp; rotate key</button>
         </form>
-        <button id="rotate-key">Rotate group key</button>
+        <button id="rotate-key" class="btn ghost">Rotate circle key</button>
       </div>
-      <button id="leave-group" class="danger" hidden>Leave group</button>
+      <button id="leave-group" class="btn danger" hidden>Leave circle</button>
     </aside>
   </div>
 
   <dialog id="safety-dialog">
+    <p class="eyebrow">Safety number</p>
     <h2 id="safety-title"></h2>
     <p class="muted small">If this number matches what the other person sees for you on their device, nobody is intercepting your messages.</p>
     <code id="safety-number" class="safety"></code>
-    <form method="dialog"><button>Close</button></form>
+    <form method="dialog"><button class="btn">Close</button></form>
   </dialog>
 
   <div id="toasts" class="toasts" role="status"></div>
