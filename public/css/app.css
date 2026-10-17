@@ -159,6 +159,24 @@ input:focus, textarea:focus { outline: none; border-color: var(--red); box-shado
 .duo-orbi { color: var(--logo-red); }
 .duo-x { color: var(--muted-foreground); }
 .duo-link { color: var(--linkusd-cyan); }
+.dedication {
+  margin: 34px auto 0;
+  max-width: 460px;
+  font-size: 13px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--tagline);
+  text-wrap: balance;
+}
+.dedication::before {
+  content: "";
+  display: block;
+  width: 64px;
+  height: 1px;
+  margin: 0 auto 14px;
+  background: linear-gradient(90deg, var(--logo-red), var(--linkusd-cyan));
+  opacity: .6;
+}
 .link-word {
   background: linear-gradient(90deg, var(--linkusd-cyan), var(--linkusd-violet));
   -webkit-background-clip: text;
