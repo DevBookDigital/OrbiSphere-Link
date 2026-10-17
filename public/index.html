@@ -13,8 +13,13 @@
   <main id="setup" class="hero" hidden>
     <canvas id="rain" class="rain" aria-hidden="true"></canvas>
     <div class="hero-inner">
-      <img src="/logo.svg" alt="" class="hero-logo" width="168" height="168">
-      <h1 class="wordmark">OrbiSphere <span class="accent">Link</span></h1>
+      <div class="pair" aria-hidden="true">
+        <img src="/logo.svg" alt="" class="mark" width="168" height="168">
+        <span class="bond"><span class="pulse"></span></span>
+        <img src="/img/linkusd-sphere.jpg" alt="" class="mark sphere" width="168" height="168">
+      </div>
+      <p class="duo"><span class="duo-orbi">OrbiSphere</span> <span class="duo-x">×</span> <span class="duo-link">LinkUSD</span></p>
+      <h1 class="wordmark">OrbiSphere <span class="link-word">Link</span></h1>
       <p class="tagline">Where every wallet is a node. Where every node is the network.</p>
       <p class="eyebrow wide">End-to-end encrypted circles</p>
       <p class="lead">End-to-end encrypted group messaging. Every circle has its own key, rotated whenever someone joins or leaves.</p>
@@ -25,10 +30,6 @@
         <button type="submit" class="btn">Join the network <span aria-hidden="true">→</span></button>
       </form>
       <p class="fine">This identity lives only in this browser. Clearing site data deletes it, and the username cannot be recovered.</p>
-      <div class="cobrand">
-        <img src="/img/linkusd-sphere.jpg" alt="" width="40" height="40">
-        <span>LinkUSD <span class="x">×</span> OrbiSphere SphereChain</span>
-      </div>
     </div>
   </main>
 
@@ -37,7 +38,7 @@
       <header class="me">
         <img src="/logo.svg" alt="" width="42" height="42">
         <div class="me-text">
-          <div class="brand wordmark">OrbiSphere <span class="accent">Link</span></div>
+          <div class="brand wordmark">OrbiSphere <span class="link-word">Link</span></div>
           <div class="muted small">@<span id="me-name"></span></div>
         </div>
         <span id="conn-status" class="status" title="Connection status">offline</span>

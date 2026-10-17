@@ -108,7 +108,8 @@ input:focus, textarea:focus { outline: none; border-color: var(--red); box-shado
   place-items: center;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 30%, rgb(251 44 54 / .12), transparent 38%),
+    radial-gradient(circle at 38% 22%, rgb(251 44 54 / .14), transparent 32%),
+    radial-gradient(circle at 62% 22%, rgb(126 92 220 / .16), transparent 32%),
     radial-gradient(ellipse at center, #0c0304 0 40%, #030102 85%);
   padding: 48px 16px;
 }
@@ -121,26 +122,49 @@ input:focus, textarea:focus { outline: none; border-color: var(--red); box-shado
   pointer-events: none;
 }
 .hero-inner { position: relative; z-index: 1; max-width: 760px; text-align: center; }
-.hero-logo { width: clamp(120px, 22vw, 168px); height: auto; }
-.hero h1 { font-size: clamp(44px, 8vw, 80px); line-height: 1.05; margin: 18px 0 14px; }
+.hero h1 { font-size: clamp(44px, 8vw, 80px); line-height: 1.05; margin: 10px 0 14px; }
 .hero .tagline { font-size: clamp(17px, 2.4vw, 22px); max-width: 560px; margin: 0 auto 8px; }
-.cobrand {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 30px;
-  padding: 6px 18px 6px 6px;
-  border-radius: 999px;
-  border: 1px solid rgb(183 156 245 / .25);
-  background: linear-gradient(90deg, rgb(18 37 69 / .7), rgb(74 60 121 / .5));
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--linkusd-cyan);
+.pair { display: flex; align-items: center; justify-content: center; }
+.mark { width: clamp(96px, 16vw, 152px); height: auto; border-radius: 999px; }
+.mark.sphere { box-shadow: 0 0 0 1px rgb(183 156 245 / .3), 0 0 44px rgb(126 232 242 / .28); }
+/* The bond between the two marks: OrbiSphere red flowing into LinkUSD cyan/violet. */
+.bond {
+  position: relative;
+  width: clamp(48px, 12vw, 120px);
+  height: 2px;
+  margin: 0 -6px;
+  background: linear-gradient(90deg, var(--logo-red), var(--linkusd-violet) 55%, var(--linkusd-cyan));
+  box-shadow: 0 0 12px rgb(183 156 245 / .5);
 }
-.cobrand img { border-radius: 999px; box-shadow: 0 0 16px rgb(126 232 242 / .35); }
-.cobrand .x { color: var(--linkusd-violet); }
+.pulse {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 10px #fff, 0 0 18px var(--linkusd-cyan);
+  animation: travel 3.2s ease-in-out infinite alternate;
+}
+@keyframes travel { from { left: 0; } to { left: calc(100% - 8px); } }
+.duo {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  margin: 26px 0 0;
+}
+.duo-orbi { color: var(--logo-red); }
+.duo-x { color: var(--muted-foreground); }
+.duo-link { color: var(--linkusd-cyan); }
+.link-word {
+  background: linear-gradient(90deg, var(--linkusd-cyan), var(--linkusd-violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 .hero .lead { font-size: clamp(17px, 2.2vw, 20px); color: var(--text); margin: 0 auto 14px; max-width: 640px; }
 .hero .sub { color: var(--muted-foreground); max-width: 560px; margin: 0 auto 30px; }
 .pill-form { display: flex; gap: 10px; max-width: 480px; margin: 0 auto; }
@@ -338,4 +362,5 @@ dialog::backdrop { background: rgb(0 0 0 / .65); backdrop-filter: blur(4px); }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
+  .pulse { animation: none; left: calc(50% - 4px); }
 }
